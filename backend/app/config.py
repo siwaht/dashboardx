@@ -6,7 +6,7 @@ Provides type-safe access to all configuration values.
 """
 
 from typing import List, Optional
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -55,7 +55,8 @@ class Settings(BaseSettings):
         env="BACKEND_CORS_ORIGINS",
     )
 
-    @validator("backend_cors_origins", pre=True)
+    @field_validator("backend_cors_origins", mode='before')
+    @classmethod
     def parse_cors_origins(cls, v):
         if isinstance(v, str):
             import json

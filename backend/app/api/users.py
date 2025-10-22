@@ -82,7 +82,7 @@ async def get_supabase_admin_client():
     return create_client(supabase_url, supabase_service_key)
 
 
-async def log_audit_action(
+def log_audit_action(
     supabase_client,
     action: str,
     target_user_id: str,
@@ -90,7 +90,7 @@ async def log_audit_action(
 ):
     """Log user management action to audit table"""
     try:
-        await supabase_client.rpc(
+        supabase_client.rpc(
             'log_user_management_action',
             {
                 'p_action': action,
@@ -257,7 +257,7 @@ async def create_user(
             )
         
         # Log audit action
-        await log_audit_action(
+        log_audit_action(
             supabase,
             'create',
             auth_response.user.id,
@@ -375,7 +375,7 @@ async def update_user(
             )
         
         # Log audit action
-        await log_audit_action(
+        log_audit_action(
             supabase,
             'update',
             user_id,
@@ -444,7 +444,7 @@ async def update_user_status(
         
         # Log audit action
         action = 'enable' if status_data.is_active else 'disable'
-        await log_audit_action(
+        log_audit_action(
             supabase,
             action,
             user_id,
@@ -499,7 +499,7 @@ async def delete_user(
         supabase.auth.admin.delete_user(user_id)
         
         # Log audit action
-        await log_audit_action(
+        log_audit_action(
             supabase,
             'delete',
             user_id,

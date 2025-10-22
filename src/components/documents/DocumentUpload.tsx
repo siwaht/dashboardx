@@ -50,16 +50,42 @@ export function DocumentUpload({ onUploadComplete }: { onUploadComplete?: () => 
 
     try {
       for (const file of selectedFiles) {
-        const { error } = await supabase.from('documents').insert({
+        // Generate unique file path
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${profile.tenant_id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        // Upload file to Supabase Storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('documents')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false
+          });
+
+        if (uploadError) throw uploadError;
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('documents')
+          .getPublicUrl(fileName);
+
+        // Create database record
+        const { error: dbError } = await supabase.from('documents').insert({
           tenant_id: profile.tenant_id,
           title: file.name,
           file_type: file.type || 'unknown',
           file_size: file.size,
+          file_path: fileName,
+          file_url: publicUrl,
           status: 'pending',
           uploaded_by: profile.id,
         });
 
-        if (error) throw error;
+        if (dbError) {
+          // Rollback: delete uploaded file if database insert fails
+          await supabase.storage.from('documents').remove([fileName]);
+          throw dbError;
+        }
       }
 
       setUploadSuccess(true);
@@ -70,6 +96,7 @@ export function DocumentUpload({ onUploadComplete }: { onUploadComplete?: () => 
       }, 2000);
     } catch (error) {
       console.error('Error uploading files:', error);
+      alert('Failed to upload files. Please try again.');
     } finally {
       setUploading(false);
     }

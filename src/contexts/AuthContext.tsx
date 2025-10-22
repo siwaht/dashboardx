@@ -23,26 +23,38 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const mockUser = {
-    id: 'dev-user-123',
-    email: 'dev@example.com',
-  } as User;
-
-  const mockProfile: UserProfile = {
-    id: 'dev-user-123',
-    tenant_id: 'dev-tenant-123',
-    full_name: 'Development User',
-    role: 'admin',
-    is_active: true,
-  };
-
-  const [user] = useState<User | null>(mockUser);
-  const [session] = useState<Session | null>(null);
-  const [profile] = useState<UserProfile | null>(mockProfile);
-  const [loading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return () => {};
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        loadProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        loadProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const loadProfile = async (userId: string) => {
@@ -57,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setProfile(data);
     } catch (error) {
       console.error('Error loading profile:', error);
+      setProfile(null);
     } finally {
       setLoading(false);
     }

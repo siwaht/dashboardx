@@ -24,7 +24,7 @@ export function UsersPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [deletingUser, setDeleteingUser] = useState<User | null>(null);
+  const [deletingUser, setDeletingUser] = useState<User | null>(null);
 
   // Redirect if not admin
   if (!canManageUsers()) {
@@ -93,7 +93,7 @@ export function UsersPage() {
   const handleDeleteUser = async (userId: string) => {
     try {
       await apiClient.deleteUser(userId);
-      setDeleteingUser(null);
+      setDeletingUser(null);
       loadUsers();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete user');
@@ -261,7 +261,7 @@ export function UsersPage() {
                           Edit
                         </button>
                         <button
-                          onClick={() => setDeleteingUser(user)}
+                          onClick={() => setDeletingUser(user)}
                           className="text-red-600 hover:text-red-900"
                         >
                           Delete
@@ -296,7 +296,7 @@ export function UsersPage() {
         {deletingUser && (
           <DeleteConfirmDialog
             user={deletingUser}
-            onClose={() => setDeleteingUser(null)}
+            onClose={() => setDeletingUser(null)}
             onConfirm={() => handleDeleteUser(deletingUser.id)}
           />
         )}
