@@ -67,41 +67,45 @@ This checklist tracks the implementation of the Agentic RAG Platform integration
 ## PHASE 2: RAG Pipeline with LlamaIndex (3-4 days)
 
 ### 2.1 Document Ingestion
-- ⬜ Create `backend/app/rag/ingestion.py`
-- ⬜ Implement file upload handler
-- ⬜ Add file type detection (PDF, DOCX, TXT, MD)
-- ⬜ Implement async processing queue
-- ⬜ Add status update mechanism
-- ⬜ Create metadata extraction logic
-- ⬜ Test with sample documents
+- ✅ Create `backend/app/rag/ingestion.py`
+- ✅ Implement file upload handler
+- ✅ Add file type detection (PDF, DOCX, TXT, MD, HTML)
+- ✅ Implement async processing
+- ✅ Add status update mechanism
+- ✅ Create metadata extraction logic
+- ✅ FGAC enforcement in ingestion pipeline
+- ⬜ Test with sample documents (pending: backend setup)
 
 ### 2.2 Chunking Strategies
-- ⬜ Create `backend/app/rag/chunking.py`
-- ⬜ Implement semantic chunking
-- ⬜ Implement recursive text splitting
-- ⬜ Implement sentence-based chunking
-- ⬜ Add configurable chunk size (default: 512 tokens)
-- ⬜ Add overlap configuration (default: 50 tokens)
-- ⬜ Test chunking with various document types
+- ✅ Create `backend/app/rag/chunking.py`
+- ✅ Implement semantic chunking
+- ✅ Implement recursive text splitting
+- ✅ Implement sentence-based chunking
+- ✅ Implement fixed-size chunking
+- ✅ Add configurable chunk size (default: 512 tokens)
+- ✅ Add overlap configuration (default: 50 tokens)
+- ✅ Factory pattern for strategy selection
+- ⬜ Test chunking with various document types (pending: backend setup)
 
 ### 2.3 Embedding Generation
-- ⬜ Create `backend/app/rag/embeddings.py`
-- ⬜ Setup OpenAI embeddings client
-- ⬜ Implement batch processing
-- ⬜ Add error handling and retry logic
-- ⬜ Add rate limiting (3000 RPM)
-- ⬜ Implement cost tracking
-- ⬜ Test embedding generation
+- ✅ Create `backend/app/rag/embeddings.py`
+- ✅ Setup OpenAI embeddings client
+- ✅ Implement batch processing
+- ✅ Add error handling and retry logic (with tenacity)
+- ✅ Add rate limiting (3000 RPM)
+- ✅ Implement cost tracking
+- ⬜ Test embedding generation (pending: OpenAI API key)
 
 ### 2.4 Vector Store Integration
-- ⬜ Create `backend/app/rag/retrieval.py`
-- ⬜ Implement Supabase vector store adapter
-- ⬜ Create similarity search function with FGAC
-- ⬜ Implement hybrid search (vector + metadata)
-- ⬜ Add reranking logic
-- ⬜ Create query transformation
-- ⬜ Test retrieval with tenant filtering
-- ⬜ Benchmark retrieval performance
+- ✅ Create `backend/app/rag/retrieval.py`
+- ✅ Implement Supabase vector store adapter
+- ✅ Create similarity search function with FGAC
+- ✅ Implement hybrid search (vector + keyword)
+- ✅ Add result combination and reranking
+- ✅ FGAC enforcement in all queries
+- ✅ Create PostgreSQL match_documents function
+- ⬜ Test retrieval with tenant filtering (pending: backend setup)
+- ⬜ Benchmark retrieval performance (pending: data)
 
 ### 2.5 LlamaIndex Integration
 - ⬜ Create LlamaIndex VectorStoreIndex
