@@ -7,6 +7,7 @@ interface UserProfile {
   tenant_id: string;
   full_name: string | null;
   role: 'admin' | 'user' | 'viewer';
+  is_active: boolean;
 }
 
 interface AuthContextType {
@@ -32,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tenant_id: 'dev-tenant-123',
     full_name: 'Development User',
     role: 'admin',
+    is_active: true,
   };
 
   const [user] = useState<User | null>(mockUser);

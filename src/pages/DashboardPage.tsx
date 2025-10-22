@@ -1,11 +1,12 @@
-mport React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Sidebar } from '../components/layout/Sidebar';
 import { ChatInterface } from '../components/chat/ChatInterface';
 import { DocumentUpload } from '../components/documents/DocumentUpload';
 import { DocumentList } from '../components/documents/DocumentList';
+import { UsersPage } from './UsersPage';
 import { FileText, Database, Settings as SettingsIcon, Sparkles, Zap, Shield, Activity, Plug } from 'lucide-react';
 
-type View = 'chat' | 'documents' | 'sources' | 'settings' | 'mcp';
+type View = 'chat' | 'documents' | 'sources' | 'settings' | 'mcp' | 'users';
 
 export function DashboardPage() {
   const [currentView, setCurrentView] = useState<View>('chat');
@@ -209,6 +210,120 @@ export function DashboardPage() {
                       <div className="relative">
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-start gap-4">
+                            <div className={`flex-shrink-0 w-14 h-14 bg-gradient-to-br ${server.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                              <Plug size={24} className="text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-gray-900 mb-1">
+                                {server.name}
+                              </h3>
+                              <p className="text-sm text-gray-600 mb-2">
+                                {server.description}
+                              </p>
+                              <div className="flex items-center gap-2">
+                                <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                                  server.status === 'connected' 
+                                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/30' 
+                                    : 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-lg shadow-gray-500/30'
+                                }`}>
+                                  {server.status === 'connected' ? '● Connected' : '○ Disconnected'}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {server.tools} tools
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          {server.status === 'connected' ? (
+                            <>
+                              <button className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gradient-to-r hover:from-red-600 hover:to-rose-600 hover:text-white rounded-xl transition-all duration-300 hover:shadow-lg">
+                                Disconnect
+                              </button>
+                              <button className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium bg-gray-100 hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 hover:text-white rounded-xl transition-all duration-300 hover:shadow-lg">
+                                <Activity size={14} />
+                                View Tools
+                              </button>
+                            </>
+                          ) : (
+                            <button className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105">
+                              <Zap size={14} />
+                              Connect
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Add New Server */}
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Zap size={20} className="text-violet-600" />
+                  Add New Server
+                </h2>
+                <div className="bg-white rounded-2xl border border-gray-200 hover:shadow-xl hover:border-violet-200 transition-all duration-300 overflow-hidden">
+                  <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-violet-50/50 to-purple-50/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <Plug size={20} className="text-white" />
+                      </div>
+                      <h3 className="font-bold text-gray-900 text-lg">
+                        Configure MCP Server
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Server Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g., Custom API Server"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-300"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        Server URL
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="https://api.example.com/mcp"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-300"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">
+                        API Key (Optional)
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Enter API key if required"
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-300"
+                      />
+                    </div>
+                    <button className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-xl hover:from-violet-500 hover:to-purple-500 transition-all duration-300 shadow-lg shadow-violet-500/30 hover:shadow-xl hover:scale-105 font-medium">
+                      <Plug size={18} />
+                      Add Server
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentView === 'users' && (
+          <UsersPage />
+        )}
+
+        {currentView === 'settings' && (
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="max-w-4xl mx-auto p-8 animate-fade-in">
               <div className="mb-8">

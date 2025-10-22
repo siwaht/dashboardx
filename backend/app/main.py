@@ -152,9 +152,13 @@ async def root():
 
 # ==================== API Routes ====================
 
-# Import and include routers (will be created in next steps)
-# from app.api import chat, documents, streaming, data_sources
+# Import and include routers
+from app.api import users
 
+app.include_router(users.router, prefix="/api/users", tags=["User Management"])
+
+# Additional routers (will be created in next steps)
+# from app.api import chat, documents, streaming, data_sources
 # app.include_router(chat.router, prefix="/chat", tags=["Chat"])
 # app.include_router(documents.router, prefix="/documents", tags=["Documents"])
 # app.include_router(streaming.router, prefix="/stream", tags=["Streaming"])

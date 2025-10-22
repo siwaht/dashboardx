@@ -38,6 +38,7 @@ export interface Database {
           tenant_id: string
           full_name: string | null
           role: 'admin' | 'user' | 'viewer'
+          is_active: boolean
           created_at: string
           updated_at: string
         }
@@ -46,6 +47,7 @@ export interface Database {
           tenant_id: string
           full_name?: string | null
           role?: 'admin' | 'user' | 'viewer'
+          is_active?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -54,6 +56,7 @@ export interface Database {
           tenant_id?: string
           full_name?: string | null
           role?: 'admin' | 'user' | 'viewer'
+          is_active?: boolean
           created_at?: string
           updated_at?: string
         }

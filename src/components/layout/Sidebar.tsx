@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { MessageSquare, Plus, Settings, LogOut, FileText, Database, Sparkles } from 'lucide-react';
+import { MessageSquare, Plus, Settings, LogOut, FileText, Database, Sparkles, Plug, Users, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePermissions } from '../../hooks/usePermissions';
 import { supabase } from '../../lib/supabase';
 import type { Database as DB } from '../../lib/database.types';
 
@@ -10,7 +11,7 @@ interface SidebarProps {
   currentSessionId: string | null;
   onSessionSelect: (sessionId: string) => void;
   onNewChat: () => void;
-  onNavigate: (view: 'chat' | 'documents' | 'sources' | 'settings') => void;
+  onNavigate: (view: 'chat' | 'documents' | 'sources' | 'settings' | 'mcp' | 'users') => void;
   currentView: string;
 }
 
@@ -23,6 +24,7 @@ export function Sidebar({
 }: SidebarProps) {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const { signOut, profile } = useAuth();
+  const { canManageUsers } = usePermissions();
 
   useEffect(() => {
     loadSessions();
@@ -63,7 +65,15 @@ export function Sidebar({
             <h1 className="font-bold text-lg bg-gradient-to-r from-blue-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
               RAG Platform
             </h1>
-            <p className="text-xs text-gray-400 font-medium truncate max-w-[140px]">{profile?.full_name}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-gray-400 font-medium truncate max-w-[100px]">{profile?.full_name}</p>
+              {profile?.role === 'admin' && (
+                <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 text-purple-300 text-[10px] font-semibold rounded border border-purple-500/30">
+                  <Shield size={10} />
+                  ADMIN
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <button
@@ -125,6 +135,36 @@ export function Sidebar({
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></div>
               )}
             </button>
+            <button
+              onClick={() => onNavigate('mcp')}
+              className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
+                currentView === 'mcp'
+                  ? 'bg-gradient-to-r from-violet-600/20 to-purple-600/20 text-white shadow-lg shadow-violet-500/10 border border-violet-500/20'
+                  : 'text-gray-300 hover:bg-gray-800/50 hover:text-white hover:translate-x-1'
+              }`}
+            >
+              <Plug size={18} className={`transition-transform duration-300 ${currentView === 'mcp' ? 'text-violet-400' : 'group-hover:scale-110'}`} />
+              <span className="font-medium">MCP Servers</span>
+              {currentView === 'mcp' && (
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></div>
+              )}
+            </button>
+            {canManageUsers() && (
+              <button
+                onClick={() => onNavigate('users')}
+                className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
+                  currentView === 'users'
+                    ? 'bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white shadow-lg shadow-amber-500/10 border border-amber-500/20'
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white hover:translate-x-1'
+                }`}
+              >
+                <Users size={18} className={`transition-transform duration-300 ${currentView === 'users' ? 'text-amber-400' : 'group-hover:scale-110'}`} />
+                <span className="font-medium">User Management</span>
+                {currentView === 'users' && (
+                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></div>
+                )}
+              </button>
+            )}
           </nav>
         </div>
 

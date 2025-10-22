@@ -282,6 +282,87 @@ class APIClient {
     });
   }
 
+  // ==================== User Management Endpoints ====================
+
+  /**
+   * Get current user profile
+   */
+  async getCurrentUser(): Promise<any> {
+    return this.get('/api/users/me');
+  }
+
+  /**
+   * List all users in the tenant
+   */
+  async listUsers(params?: {
+    skip?: number;
+    limit?: number;
+    search?: string;
+    role?: string;
+    is_active?: boolean;
+  }): Promise<any[]> {
+    const queryParams: Record<string, string> = {};
+    if (params?.skip !== undefined) queryParams.skip = params.skip.toString();
+    if (params?.limit !== undefined) queryParams.limit = params.limit.toString();
+    if (params?.search) queryParams.search = params.search;
+    if (params?.role) queryParams.role = params.role;
+    if (params?.is_active !== undefined) queryParams.is_active = params.is_active.toString();
+
+    return this.get('/api/users', queryParams);
+  }
+
+  /**
+   * Get a specific user by ID
+   */
+  async getUser(userId: string): Promise<any> {
+    return this.get(`/api/users/${userId}`);
+  }
+
+  /**
+   * Create a new user
+   */
+  async createUser(userData: {
+    email: string;
+    password: string;
+    full_name?: string;
+    role?: 'admin' | 'user' | 'viewer';
+  }): Promise<any> {
+    return this.post('/api/users', userData);
+  }
+
+  /**
+   * Update a user
+   */
+  async updateUser(userId: string, userData: {
+    full_name?: string;
+    role?: 'admin' | 'user' | 'viewer';
+    is_active?: boolean;
+  }): Promise<any> {
+    return this.put(`/api/users/${userId}`, userData);
+  }
+
+  /**
+   * Update user status (enable/disable)
+   */
+  async updateUserStatus(userId: string, isActive: boolean): Promise<any> {
+    const headers = await this.getAuthHeaders();
+
+    const response = await fetch(`${this.baseURL}/api/users/${userId}/status`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify({ is_active: isActive }),
+    });
+
+    return this.handleResponse(response);
+  }
+
+  /**
+   * Delete a user
+   */
+  async deleteUser(userId: string): Promise<void> {
+    return this.delete(`/api/users/${userId}`);
+  }
+
   // ==================== Health Check ====================
 
   /**
