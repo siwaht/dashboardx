@@ -4,8 +4,8 @@
 This document summarizes the implementation of a hierarchical login system with admin user management capabilities for the SaaS platform.
 
 ## Admin Credentials
-- **Email**: cc@siwaht.com
-- **Password**: Hoal173!
+- **Email**: cc@siwahtcom
+- **Password**: Hola173!
 - **Role**: admin
 - **Tenant**: Admin Organization (system tenant)
 
@@ -151,7 +151,7 @@ This document summarizes the implementation of a hierarchical login system with 
    -- Run in Supabase SQL Editor after creating auth user
    SELECT create_admin_user_profile(
      '<auth_user_id>',
-     'cc@siwaht.com',
+     'cc@siwahtcom',
      'System Administrator'
    );
    ```

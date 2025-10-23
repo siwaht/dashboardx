@@ -92,8 +92,8 @@ ON CONFLICT (id) DO NOTHING;
 -- The actual user creation should be done via:
 -- 1. Supabase Dashboard > Authentication > Users > Add User
 -- 2. Or via Supabase Auth API with the following details:
---    Email: cc@siwaht.com
---    Password: Hoal173!
+--    Email: cc@siwahtcom
+--    Password: Hola173!
 --    
 -- After creating the auth user, insert the profile:
 -- INSERT INTO user_profiles (id, tenant_id, full_name, role, is_active)

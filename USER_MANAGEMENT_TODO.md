@@ -1,8 +1,8 @@
 # User Management & Hierarchical Login System Implementation
 
 ## Admin Credentials
-- Email: cc@siwaht.com
-- Password: Hoal173!
+- Email: cc@siwahtcom
+- Password: Hola173!
 
 ## Implementation Progress
 
@@ -63,12 +63,12 @@ All code has been implemented. The system is ready for testing once:
    ```
 
 2. **Create Admin User:**
-   - Create user in Supabase Auth Dashboard with email: cc@siwaht.com
+   - Create user in Supabase Auth Dashboard with email: cc@siwahtcom
    - Then run in SQL Editor:
    ```sql
    SELECT create_admin_user_profile(
      '<auth_user_id>',
-     'cc@siwaht.com',
+     'cc@siwahtcom',
      'System Administrator'
    );
    ```

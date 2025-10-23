@@ -153,34 +153,17 @@ async def root():
 # ==================== API Routes ====================
 
 # Import and include routers
-from app.api import users
+from app.api import users, rag, agents, copilotkit
 
 app.include_router(users.router, prefix="/api/users", tags=["User Management"])
+app.include_router(rag.router, tags=["RAG Pipeline"])
+app.include_router(agents.router, tags=["AI Agents"])
+app.include_router(copilotkit.router, tags=["CopilotKit"])
 
-# Additional routers (will be created in next steps)
-# from app.api import chat, documents, streaming, data_sources
-# app.include_router(chat.router, prefix="/chat", tags=["Chat"])
-# app.include_router(documents.router, prefix="/documents", tags=["Documents"])
+# Additional routers (will be created in future phases)
+# from app.api import streaming, data_sources
 # app.include_router(streaming.router, prefix="/stream", tags=["Streaming"])
 # app.include_router(data_sources.router, prefix="/data-sources", tags=["Data Sources"])
-
-
-# ==================== CopilotKit Integration ====================
-
-@app.post("/copilotkit")
-async def copilotkit_endpoint(request: Request):
-    """
-    CopilotKit runtime endpoint
-    Handles agent state synchronization and action execution
-    """
-    # This will be implemented with full CopilotKit integration
-    body = await request.json()
-    
-    return {
-        "status": "success",
-        "message": "CopilotKit endpoint - to be implemented",
-        "data": body,
-    }
 
 
 # ==================== Development Endpoints ====================

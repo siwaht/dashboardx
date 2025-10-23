@@ -44,8 +44,8 @@ This document summarizes all completed work on the Agentic RAG Platform, includi
 - ✅ Admin-only navigation menu item
 
 #### Admin Credentials:
-- **Email**: cc@siwaht.com
-- **Password**: Hoal173!
+- **Email**: cc@siwahtcom
+- **Password**: Hola173!
 
 ---
 
@@ -160,13 +160,13 @@ npm run dev
 -- Run: supabase/migrations/20240115000000_add_user_management_and_admin.sql
 
 -- 2. Create admin user in Supabase Auth Dashboard
--- Email: cc@siwaht.com
--- Password: Hoal173!
+-- Email: cc@siwahtcom
+-- Password: Hola173!
 
 -- 3. Create admin profile
 SELECT create_admin_user_profile(
   '<auth_user_id_from_step_2>',
-  'cc@siwaht.com',
+  'cc@siwahtcom',
   'System Administrator'
 );
 ```

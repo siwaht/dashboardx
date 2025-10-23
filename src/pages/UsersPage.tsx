@@ -103,33 +103,41 @@ export function UsersPage() {
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-purple-500/30';
       case 'user':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-blue-500/30';
       case 'viewer':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gradient-to-r from-gray-500 to-slate-500 text-white shadow-gray-500/30';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gradient-to-r from-gray-500 to-slate-500 text-white shadow-gray-500/30';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Users className="h-8 w-8 text-blue-600" />
-                User Management
-              </h1>
-              <p className="text-gray-600 mt-2">Manage users, roles, and permissions</p>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl blur-xl opacity-30 animate-pulse-slow"></div>
+                <div className="relative w-16 h-16 bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 rounded-2xl flex items-center justify-center shadow-xl shadow-amber-500/30">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 bg-clip-text text-transparent">
+                  User Management
+                </h1>
+                <p className="text-gray-600 mt-1 font-medium">Manage users, roles, and permissions</p>
+              </div>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:from-amber-500 hover:to-orange-500 transition-all duration-300 shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 hover:scale-105 active:scale-95 font-medium relative overflow-hidden"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
               <UserPlus size={20} />
               Add User
             </button>
@@ -137,7 +145,7 @@ export function UsersPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div className="relative">
@@ -171,7 +179,7 @@ export function UsersPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white hover:border-gray-300 hover:shadow-md focus:shadow-lg cursor-pointer"
               >
                 <option value="">All Status</option>
                 <option value="active">Active</option>
@@ -183,29 +191,41 @@ export function UsersPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-center gap-3">
-            <AlertCircle className="text-red-600" size={20} />
-            <p className="text-red-800">{error}</p>
+          <div className="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-200 rounded-2xl p-4 mb-6 flex items-center gap-3 shadow-lg shadow-red-500/10 animate-fade-in">
+            <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+              <AlertCircle className="text-white" size={20} />
+            </div>
+            <p className="text-red-800 font-medium">{error}</p>
           </div>
         )}
 
         {/* Users Table */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="animate-spin text-blue-600" size={32} />
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
+                <Loader2 className="relative animate-spin text-amber-600" size={48} />
+              </div>
+              <p className="mt-4 text-gray-600 font-medium">Loading users...</p>
             </div>
           ) : users.length === 0 ? (
-            <div className="text-center py-12">
-              <Users className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <p className="text-gray-600">No users found</p>
+            <div className="text-center py-16 animate-fade-in">
+              <div className="relative inline-block mb-6">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full blur-2xl opacity-20"></div>
+                <div className="relative w-20 h-20 mx-auto bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Users className="h-10 w-10 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">No users found</h3>
+              <p className="text-gray-600">Try adjusting your filters or create a new user</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
                       User
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -217,55 +237,61 @@ export function UsersPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Created
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {users.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                <tbody className="bg-white divide-y divide-gray-100">
+                  {users.map((user, index) => (
+                    <tr 
+                      key={user.id} 
+                      style={{ animationDelay: `${index * 50}ms` }}
+                      className="group hover:bg-gradient-to-r hover:from-amber-50/50 hover:to-orange-50/50 transition-all duration-300 animate-fade-in-up"
+                    >
+                      <td className="px-6 py-5 whitespace-nowrap">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-semibold text-gray-900 group-hover:text-amber-600 transition-colors">
                             {user.full_name || 'No name'}
                           </div>
                           <div className="text-sm text-gray-500">{user.email}</div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <span className={`px-3 py-1.5 text-xs font-bold rounded-full ${getRoleBadgeColor(user.role)} shadow-md transition-all duration-300 group-hover:scale-105`}>
                           {user.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-5 whitespace-nowrap">
                         <button
                           onClick={() => handleToggleStatus(user)}
-                          className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                          className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 ${
                             user.is_active
-                              ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                              : 'bg-red-100 text-red-800 hover:bg-red-200'
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-green-500/30 hover:from-green-400 hover:to-emerald-400'
+                              : 'bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-red-500/30 hover:from-red-400 hover:to-rose-400'
                           }`}
                         >
                           {user.is_active ? 'Active' : 'Inactive'}
                         </button>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600 font-medium">
                         {new Date(user.created_at).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => setEditingUser(user)}
-                          className="text-blue-600 hover:text-blue-900 mr-4"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => setDeletingUser(user)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </button>
+                      <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button
+                            onClick={() => setEditingUser(user)}
+                            className="px-4 py-2 text-blue-600 hover:text-white hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 rounded-lg transition-all duration-300 font-semibold hover:shadow-lg hover:scale-105"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => setDeletingUser(user)}
+                            className="px-4 py-2 text-red-600 hover:text-white hover:bg-gradient-to-r hover:from-red-600 hover:to-rose-600 rounded-lg transition-all duration-300 font-semibold hover:shadow-lg hover:scale-105"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -352,17 +378,28 @@ function UserFormModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">{user ? 'Edit User' : 'Create New User'}</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in relative overflow-hidden">
+        {/* Decorative gradient */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500"></div>
+        
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+            <UserPlus size={24} className="text-white" />
+          </div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+            {user ? 'Edit User' : 'Create New User'}
+          </h2>
+        </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded p-3 mb-4 text-red-800 text-sm">
+          <div className="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-200 rounded-xl p-4 mb-4 text-red-800 text-sm font-medium flex items-center gap-2 animate-fade-in">
+            <AlertCircle size={18} className="flex-shrink-0" />
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input
@@ -456,15 +493,20 @@ function DeleteConfirmDialog({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <div className="flex items-center gap-3 mb-4">
-          <AlertCircle className="text-red-600" size={24} />
-          <h2 className="text-xl font-bold">Delete User</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in relative overflow-hidden">
+        {/* Decorative gradient */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-rose-500"></div>
+        
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
+            <AlertCircle className="text-white" size={24} />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">Delete User</h2>
         </div>
 
-        <p className="text-gray-600 mb-6">
-          Are you sure you want to delete <strong>{user.email}</strong>? This action cannot be undone.
+        <p className="text-gray-700 mb-6 text-lg">
+          Are you sure you want to delete <strong className="text-red-600">{user.email}</strong>? This action cannot be undone.
         </p>
 
         <div className="flex gap-3">
