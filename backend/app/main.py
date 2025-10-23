@@ -153,12 +153,13 @@ async def root():
 # ==================== API Routes ====================
 
 # Import and include routers
-from app.api import users, rag, agents, copilotkit
+from app.api import users, rag, agents, copilotkit, analytics
 
 app.include_router(users.router, prefix="/api/users", tags=["User Management"])
 app.include_router(rag.router, tags=["RAG Pipeline"])
 app.include_router(agents.router, tags=["AI Agents"])
 app.include_router(copilotkit.router, tags=["CopilotKit"])
+app.include_router(analytics.router, tags=["Analytics"])
 
 # Additional routers (will be created in future phases)
 # from app.api import streaming, data_sources
