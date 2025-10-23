@@ -25,8 +25,10 @@ from app.analytics.connectors import DataConnectorFactory, DataSourceType
 from app.analytics.processors import DataProcessor
 from app.analytics.ml_models import MLEngine, ModelConfig
 from app.analytics.agents import AnalyticsAgentOrchestrator
-from app.security.auth import get_current_user
-from app.models import User
+from app.security.auth import get_current_user, AuthenticatedUser
+
+# Type alias for compatibility
+User = AuthenticatedUser
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 

@@ -22,6 +22,7 @@ from app.analytics.ml_models import MLEngine
 from app.analytics.agents import AnalyticsAgentOrchestrator
 from app.rag.structured_rag import StructuredDataRAG
 from app.rag.statistical_rag import StatisticalRAG
+from cachetools import TTLCache
 
 logger = logging.getLogger(__name__)
 
@@ -60,9 +61,19 @@ class AnalyticsEngine:
         self.structured_rag = StructuredDataRAG()
         self.statistical_rag = StatisticalRAG()
         
+        # Cache for frequently accessed data with TTL and max size to prevent memory leaks
+        self._cache_Now I need to update the cache initialization to use TTLCache:
+
+<edit_file>
+<path>backend/app/analytics/engine.py</path>
+<content>
+<<<<<<< SEARCH
         # Cache for frequently accessed data
         self._cache = {}
         self._cache_ttl = 3600  # 1 hour default TTL
+=======
+        # Cache for frequently accessed data with TTL and max size
+        self._cache = TTLCache(maxsize=100, ttl=3600)  # 1 hour TTL, max 100 items
         
         logger.info("Analytics Engine initialized successfully")
     
@@ -163,22 +174,51 @@ class AnalyticsEngine:
         # Get data from source
         data = await self._fetch_data(query, query_type, data_source_id, context)
         
+        # Validate data is not empty
+        if not data or (isinstance(data, (list, dict)) and len(data) == 0):
+            logger.warning("No data available for analysis")
+            return {
+                "data": [],
+                "error": "No data available for analysis",
+                "statistics": None
+            }
+        
         # Process data based on analysis type
-        if analysis_type == AnalysisType.EXPLORATORY:
-            processed_data = await self.data_processor.explore_data(data)
-        elif analysis_type == AnalysisType.DESCRIPTIVE:
-            processed_data = await self.data_processor.describe_data(data)
-        elif analysis_type == AnalysisType.DIAGNOSTIC:
-            processed_data = await self.data_processor.diagnose_data(data, context)
-        else:
-            processed_data = data
-        
-        # Apply statistical analysis if needed
-        if query_type == QueryType.STATISTICAL:
-            statistics = await self.statistical_rag.analyze(query, processed_data)
-            processed_data["statistics"] = statistics
-        
-        return processed_data
+        try:
+            if analysis_type == AnalysisType.EXPLORATORY:
+                processed_data = await self.data_processor.explore_data(data)
+            elif analysis_type == AnalysisType.DESCRIPTIVE:
+                processed_data = await self.data_processor.describe_data(data)
+            elif analysis_type == AnalysisType.DIAGNOSTIC:
+                processed_data = await self.data_processor.diagnose_data(data, context)
+            else:
+                processed_data = data
+            
+            # Apply statistical analysis if needed
+            if query_type == QueryType.STATISTICAL and processed_data:
+                # Ensure we have valid data before statistical analysis
+                if isinstance(processed_data, dict) and processed_data.get("data"):
+                    statistics = await self.statistical_rag.analyze(query, processed_data)
+                    processed_data["statistics"] = statistics
+                else:
+                    processed_data["statistics"] = {"error": "Insufficient data for statistical analysis"}
+            
+            return processed_data
+            
+        except ZeroDivisionError as e:
+            logger.error(f"Division by zero error during analysis: {str(e)}")
+            return {
+                "data": data,
+                "error": "Mathematical error: division by zero encountered",
+                "statistics": None
+            }
+        except Exception as e:
+            logger.error(f"Error during standard analysis: {str(e)}")
+            return {
+                "data": data,
+                "error": f"Analysis error: {str(e)}",
+                "statistics": None
+            }
     
     async def _handle_predictive_analysis(
         self,

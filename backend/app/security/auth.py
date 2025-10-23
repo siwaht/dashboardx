@@ -15,6 +15,10 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
+# Validate JWT secret is configured at module load time
+if not settings.supabase_jwt_secret:
+    raise ValueError("SUPABASE_JWT_SECRET must be configured. Please set it in your environment variables.")
+
 # Security scheme
 security = HTTPBearer()
 
