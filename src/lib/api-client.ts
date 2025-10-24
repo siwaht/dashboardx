@@ -12,7 +12,7 @@ class APIClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8000';
+    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
   }
 
   /**

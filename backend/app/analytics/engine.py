@@ -61,17 +61,6 @@ class AnalyticsEngine:
         self.structured_rag = StructuredDataRAG()
         self.statistical_rag = StatisticalRAG()
         
-        # Cache for frequently accessed data with TTL and max size to prevent memory leaks
-        self._cache_Now I need to update the cache initialization to use TTLCache:
-
-<edit_file>
-<path>backend/app/analytics/engine.py</path>
-<content>
-<<<<<<< SEARCH
-        # Cache for frequently accessed data
-        self._cache = {}
-        self._cache_ttl = 3600  # 1 hour default TTL
-=======
         # Cache for frequently accessed data with TTL and max size
         self._cache = TTLCache(maxsize=100, ttl=3600)  # 1 hour TTL, max 100 items
         
@@ -432,7 +421,7 @@ class AnalyticsEngine:
         """Process visual queries (e.g., chart interactions)"""
         
         # Parse visual query context
-        visual_context = context.get("visual_context", {})
+        visual_context = context.get("visual_context", {}) if context else {}
         
         # Generate appropriate data query based on visual interaction
         if visual_context.get("action") == "drill_down":
@@ -515,8 +504,9 @@ class AnalyticsEngine:
         if not cached_time:
             return False
         
+        # TTLCache handles expiration automatically, but we keep this for compatibility
         age = (datetime.utcnow() - cached_time).total_seconds()
-        return age < self._cache_ttl
+        return age < 3600  # 1 hour
     
     async def clear_cache(self):
         """Clear the analytics cache"""

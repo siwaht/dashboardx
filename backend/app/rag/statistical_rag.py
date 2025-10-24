@@ -754,3 +754,4 @@ class StatisticalRAG:
             if high_vif:
                 recommendations.append(
                     f
+)

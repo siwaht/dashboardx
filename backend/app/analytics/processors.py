@@ -831,3 +831,4 @@ class StreamProcessor:
         Process data using windowing functions
         
         Args:
+"""
