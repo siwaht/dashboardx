@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MessageSquare, Plus, Settings, LogOut, FileText, Database, Sparkles, Plug, Users, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePermissions } from '../../hooks/usePermissions';
@@ -93,8 +94,8 @@ export function Sidebar({
             Navigation
           </h3>
           <nav className="space-y-1">
-            <button
-              onClick={() => onNavigate('chat')}
+            <Link
+              to="/dashboard/chat"
               className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
                 currentView === 'chat'
                   ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/20 text-white shadow-lg shadow-blue-500/10 border border-blue-500/20'
@@ -106,9 +107,9 @@ export function Sidebar({
               {currentView === 'chat' && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></div>
               )}
-            </button>
-            <button
-              onClick={() => onNavigate('documents')}
+            </Link>
+            <Link
+              to="/dashboard/documents"
               className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
                 currentView === 'documents'
                   ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white shadow-lg shadow-purple-500/10 border border-purple-500/20'
@@ -120,9 +121,9 @@ export function Sidebar({
               {currentView === 'documents' && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></div>
               )}
-            </button>
-            <button
-              onClick={() => onNavigate('sources')}
+            </Link>
+            <Link
+              to="/dashboard/sources"
               className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
                 currentView === 'sources'
                   ? 'bg-gradient-to-r from-indigo-600/20 to-cyan-600/20 text-white shadow-lg shadow-indigo-500/10 border border-indigo-500/20'
@@ -134,9 +135,9 @@ export function Sidebar({
               {currentView === 'sources' && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></div>
               )}
-            </button>
-            <button
-              onClick={() => onNavigate('mcp')}
+            </Link>
+            <Link
+              to="/dashboard/mcp"
               className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
                 currentView === 'mcp'
                   ? 'bg-gradient-to-r from-violet-600/20 to-purple-600/20 text-white shadow-lg shadow-violet-500/10 border border-violet-500/20'
@@ -148,10 +149,10 @@ export function Sidebar({
               {currentView === 'mcp' && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></div>
               )}
-            </button>
+            </Link>
             {canManageUsers() && (
-              <button
-                onClick={() => onNavigate('users')}
+              <Link
+                to="/dashboard/users"
                 className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
                   currentView === 'users'
                     ? 'bg-gradient-to-r from-amber-600/20 to-orange-600/20 text-white shadow-lg shadow-amber-500/10 border border-amber-500/20'
@@ -163,7 +164,7 @@ export function Sidebar({
                 {currentView === 'users' && (
                   <div className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></div>
                 )}
-              </button>
+              </Link>
             )}
           </nav>
         </div>
@@ -195,8 +196,8 @@ export function Sidebar({
       </div>
 
       <div className="relative z-10 p-3 border-t border-gray-800/50 backdrop-blur-sm space-y-1">
-        <button
-          onClick={() => onNavigate('settings')}
+        <Link
+          to="/dashboard/settings"
           className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
             currentView === 'settings'
               ? 'bg-gradient-to-r from-gray-700/50 to-gray-800/50 text-white shadow-md border border-gray-600/30'
@@ -205,7 +206,7 @@ export function Sidebar({
         >
           <Settings size={18} className={`transition-transform duration-300 ${currentView === 'settings' ? '' : 'group-hover:rotate-90'}`} />
           <span className="font-medium">Settings</span>
-        </button>
+        </Link>
         <button
           onClick={signOut}
           className="group w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:bg-red-500/10 hover:text-red-400 rounded-xl transition-all duration-300 hover:translate-x-1 border border-transparent hover:border-red-500/20"

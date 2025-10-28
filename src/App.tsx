@@ -1,12 +1,24 @@
+import { Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { AuthPage } from './pages/AuthPage';
-import { DashboardPage } from './pages/DashboardPage';
 import { Loader2, AlertCircle } from 'lucide-react';
+import { useEffect } from 'react';
 
 function AppContent() {
   const { user, profile, loading } = useAuth();
+  const navigate = useNavigate();
 
-  // Show loading state while checking authentication
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        navigate('/auth');
+      } else if (profile && !profile.is_active) {
+        // The UI for disabled account will be handled here, but navigation is blocked.
+      } else {
+        navigate('/dashboard/chat');
+      }
+    }
+  }, [user, profile, loading, navigate]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30">
@@ -18,12 +30,6 @@ function AppContent() {
     );
   }
 
-  // Show auth page if not logged in
-  if (!user) {
-    return <AuthPage />;
-  }
-
-  // Check if user account is active
   if (profile && !profile.is_active) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30">
@@ -44,8 +50,7 @@ function AppContent() {
     );
   }
 
-  // Show dashboard for authenticated and active users
-  return <DashboardPage />;
+  return <Outlet />;
 }
 
 function App() {
