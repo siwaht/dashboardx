@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import DOMPurify from 'dompurify';
 import { Send, Loader2, Brain, Sparkles, Zap, BarChart3 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -250,7 +251,10 @@ export function EnhancedChatInterface({ sessionId, onNewSession }: EnhancedChatI
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                    <p
+                      className="whitespace-pre-wrap leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content) }}
+                    />
                     <div className="flex items-center gap-2 mt-2 text-xs opacity-60">
                       <span>{new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
