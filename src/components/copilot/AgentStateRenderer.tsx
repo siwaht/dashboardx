@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { useCopilotAgent } from '@/hooks/useCopilotAgent';
+import { useCopilotAgent } from '../../hooks/useCopilotAgent';
 
 interface AgentStateRendererProps {
   className?: string;
@@ -79,7 +79,7 @@ export function AgentStateRenderer({ className = '' }: AgentStateRendererProps) 
             Agent Reasoning
           </h4>
           <div className="thoughts-list">
-            {agentState.all_thoughts.map((thought, idx) => (
+            {agentState.all_thoughts.map((thought: string, idx: number) => (
               <div key={idx} className="thought-item">
                 <span className="thought-number">{idx + 1}</span>
                 <span className="thought-text">{thought}</span>
@@ -99,7 +99,7 @@ export function AgentStateRenderer({ className = '' }: AgentStateRendererProps) 
             Tools Used
           </h4>
           <div className="tools-list">
-            {agentState.tools_used.map((tool, idx) => (
+            {agentState.tools_used.map((tool: string, idx: number) => (
               <span key={idx} className="tool-badge">
                 {formatToolName(tool)}
               </span>
@@ -116,7 +116,7 @@ export function AgentStateRenderer({ className = '' }: AgentStateRendererProps) 
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .agent-state-renderer {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           border-radius: 12px;

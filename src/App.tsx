@@ -1,11 +1,23 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Loader2, AlertCircle } from 'lucide-react';
-import AuthPage from './pages/AuthPage';
-import { DashboardPage } from './pages/DashboardPage';
+import { useEffect } from 'react';
 
 function AppContent() {
   const { user, profile, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        navigate('/auth');
+      } else if (profile && !profile.is_active) {
+        // The UI for disabled account will be handled here, but navigation is blocked.
+      } else {
+        navigate('/dashboard/chat');
+      }
+    }
+  }, [user, profile, loading, navigate]);
 
   if (loading) {
     return (
@@ -38,22 +50,14 @@ function AppContent() {
     );
   }
 
-  return (
-    <Routes>
-      <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to="/dashboard/chat" />} />
-      <Route path="/dashboard/*" element={user ? <DashboardPage /> : <Navigate to="/auth" />} />
-      <Route path="*" element={<Navigate to="/dashboard/chat" />} />
-    </Routes>
-  );
+  return <Outlet />;
 }
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </Router>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

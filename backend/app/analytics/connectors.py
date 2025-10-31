@@ -260,8 +260,7 @@ class MySQLConnector(BaseConnector):
                 table_name = table[0]
                 
                 # Get columns for each table
-                # Properly quote table name to prevent SQL injection issues.
-                await cursor.execute(f"DESCRIBE `{table_name.replace('`', '``')}`")
+                await cursor.execute(f"DESCRIBE {table_name}")
                 columns = await cursor.fetchall()
                 
                 schema[table_name] = {

@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Users, UserPlus, Search, Filter, AlertCircle, Loader2 } from 'lucide-react';
 import { apiClient } from '../lib/api-client';
 import { usePermissions } from '../hooks/usePermissions';
+
+type UserCreation = {
+  email: string;
+  password?: string;
+  full_name: string | null;
+  role: 'admin' | 'user' | 'viewer';
+};
 
 interface User {
   id: string;
@@ -39,15 +46,11 @@ export function UsersPage() {
     );
   }
 
-  useEffect(() => {
-    loadUsers();
-  }, [searchTerm, roleFilter, statusFilter]);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const params: any = {};
+      const params: Record<string, string | boolean> = {};
       if (searchTerm) params.search = searchTerm;
       if (roleFilter) params.role = roleFilter;
       if (statusFilter) params.is_active = statusFilter === 'active';
@@ -59,26 +62,22 @@ export function UsersPage() {
     } finally {
       setLoading(false);
     }
+  }, [searchTerm, roleFilter, statusFilter]);
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
+
+  const handleCreateUser = async (userData: UserCreation) => {
+    await apiClient.createUser(userData);
+    setShowCreateModal(false);
+    loadUsers();
   };
 
-  const handleCreateUser = async (userData: any) => {
-    try {
-      await apiClient.createUser(userData);
-      setShowCreateModal(false);
-      loadUsers();
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const handleUpdateUser = async (userId: string, userData: any) => {
-    try {
-      await apiClient.updateUser(userId, userData);
-      setEditingUser(null);
-      loadUsers();
-    } catch (err) {
-      throw err;
-    }
+  const handleUpdateUser = async (userId: string, userData: Partial<User>) => {
+    await apiClient.updateUser(userId, userData);
+    setEditingUser(null);
+    loadUsers();
   };
 
   const handleToggleStatus = async (user: User) => {
@@ -339,7 +338,7 @@ function UserFormModal({
 }: {
   user?: User;
   onClose: () => void;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: Partial<User> | UserCreation) => Promise<void>;
 }) {
   const [formData, setFormData] = useState({
     email: user?.email || '',
@@ -440,7 +439,7 @@ function UserFormModal({
             <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
             <select
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value as User['role'] })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="viewer">Viewer</option>
