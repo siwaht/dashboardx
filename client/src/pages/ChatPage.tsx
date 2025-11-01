@@ -57,14 +57,14 @@ export function ChatPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
+    <div className="h-[calc(100vh-8rem)] flex flex-col">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900" data-testid="text-page-title">Chat</h1>
-        <p className="text-gray-600 mt-1">Ask questions about your documents using RAG</p>
+        <h1 className="text-3xl font-bold" data-testid="text-page-title">Chat</h1>
+        <p className="text-gray-400 mt-1">Ask questions about your documents using RAG</p>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 bg-white rounded-lg border border-gray-200 overflow-y-auto p-4 space-y-4 mb-4">
+      <div className="flex-1 bg-[#161b22] border border-[#30363d] rounded-lg overflow-y-auto p-4 space-y-4 mb-4">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
@@ -87,7 +87,7 @@ export function ChatPage() {
                 className={`max-w-[70%] rounded-lg px-4 py-2 ${
                   message.role === 'user'
                     ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-900'
+                    : 'bg-[#21262d] text-white'
                 }`}
               >
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -107,7 +107,7 @@ export function ChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question about your documents..."
-          className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-4 py-3 bg-[#161b22] border border-[#30363d] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           disabled={sendMessage.isPending}
           data-testid="input-message"
         />

@@ -114,7 +114,7 @@ export function UsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30 p-6">
+    <div>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 animate-fade-in">
@@ -130,7 +130,7 @@ export function UsersPage() {
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 bg-clip-text text-transparent">
                   User Management
                 </h1>
-                <p className="text-gray-600 mt-1 font-medium">Manage users, roles, and permissions</p>
+                <p className="text-gray-400 mt-1 font-medium">Manage users, roles, and permissions</p>
               </div>
             </div>
             <button
@@ -145,7 +145,7 @@ export function UsersPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
+        <div className="bg-[#161b22] border border-[#30363d] rounded-2xl p-6 mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div className="relative">
@@ -155,7 +155,7 @@ export function UsersPage() {
                 placeholder="Search by email or name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
@@ -165,7 +165,7 @@ export function UsersPage() {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
+                className="w-full pl-10 pr-4 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
               >
                 <option value="">All Roles</option>
                 <option value="admin">Admin</option>
@@ -179,7 +179,7 @@ export function UsersPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 bg-white hover:border-gray-300 hover:shadow-md focus:shadow-lg cursor-pointer"
+                className="w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300 hover:border-blue-500 cursor-pointer"
               >
                 <option value="">All Status</option>
                 <option value="active">Active</option>
@@ -191,23 +191,23 @@ export function UsersPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-200 rounded-2xl p-4 mb-6 flex items-center gap-3 shadow-lg shadow-red-500/10 animate-fade-in">
+          <div className="bg-red-900/50 border-2 border-red-500/50 rounded-2xl p-4 mb-6 flex items-center gap-3 animate-fade-in">
             <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
               <AlertCircle className="text-white" size={20} />
             </div>
-            <p className="text-red-800 font-medium">{error}</p>
+            <p className="text-red-200 font-medium">{error}</p>
           </div>
         )}
 
         {/* Users Table */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="bg-[#161b22] border border-[#30363d] rounded-2xl overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full blur-xl opacity-30 animate-pulse"></div>
                 <Loader2 className="relative animate-spin text-amber-600" size={48} />
               </div>
-              <p className="mt-4 text-gray-600 font-medium">Loading users...</p>
+              <p className="mt-4 text-gray-400 font-medium">Loading users...</p>
             </div>
           ) : users.length === 0 ? (
             <div className="text-center py-16 animate-fade-in">
@@ -217,44 +217,44 @@ export function UsersPage() {
                   <Users className="h-10 w-10 text-white" />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No users found</h3>
-              <p className="text-gray-600">Try adjusting your filters or create a new user</p>
+              <h3 className="text-xl font-bold mb-2">No users found</h3>
+              <p className="text-gray-400">Try adjusting your filters or create a new user</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
+                <thead className="bg-[#21262d] border-b-2 border-[#30363d]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
                       User
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Role
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Created
                     </th>
-                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-600 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#30363d]">
                   {users.map((user, index) => (
                     <tr 
                       key={user.id} 
                       style={{ animationDelay: `${index * 50}ms` }}
-                      className="group hover:bg-gradient-to-r hover:from-amber-50/50 hover:to-orange-50/50 transition-all duration-300 animate-fade-in-up"
+                      className="group hover:bg-[#21262d]/50 transition-all duration-300 animate-fade-in-up"
                     >
                       <td className="px-6 py-5 whitespace-nowrap">
                         <div>
-                          <div className="text-sm font-semibold text-gray-900 group-hover:text-amber-600 transition-colors">
+                          <div className="text-sm font-semibold text-white group-hover:text-amber-400 transition-colors">
                             {user.full_name || 'No name'}
                           </div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm text-gray-400">{user.email}</div>
                         </div>
                       </td>
                       <td className="px-6 py-5 whitespace-nowrap">
@@ -274,20 +274,20 @@ export function UsersPage() {
                           {user.is_active ? 'Active' : 'Inactive'}
                         </button>
                       </td>
-                      <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600 font-medium">
+                      <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-400 font-medium">
                         {new Date(user.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <button
                             onClick={() => setEditingUser(user)}
-                            className="px-4 py-2 text-blue-600 hover:text-white hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 rounded-lg transition-all duration-300 font-semibold hover:shadow-lg hover:scale-105"
+                            className="px-4 py-2 text-blue-400 hover:text-white hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 rounded-lg transition-all duration-300 font-semibold hover:shadow-lg hover:scale-105"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => setDeletingUser(user)}
-                            className="px-4 py-2 text-red-600 hover:text-white hover:bg-gradient-to-r hover:from-red-600 hover:to-rose-600 rounded-lg transition-all duration-300 font-semibold hover:shadow-lg hover:scale-105"
+                            className="px-4 py-2 text-red-400 hover:text-white hover:bg-gradient-to-r hover:from-red-600 hover:to-rose-600 rounded-lg transition-all duration-300 font-semibold hover:shadow-lg hover:scale-105"
                           >
                             Delete
                           </button>

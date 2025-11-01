@@ -62,11 +62,11 @@ export function DocumentsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900" data-testid="text-page-title">Documents</h1>
-          <p className="text-gray-600 mt-1">Manage your document library</p>
+          <h1 className="text-3xl font-bold" data-testid="text-page-title">Documents</h1>
+          <p className="text-gray-400 mt-1">Manage your document library</p>
         </div>
         <button
           onClick={handleUpload}
@@ -83,10 +83,10 @@ export function DocumentsPage() {
           <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
         </div>
       ) : documents.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center" data-testid="text-empty-state">
+        <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-12 text-center" data-testid="text-empty-state">
           <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No documents yet</h3>
-          <p className="text-gray-600 mb-4">Upload your first document to get started with RAG</p>
+          <h3 className="text-lg font-medium mb-2">No documents yet</h3>
+          <p className="text-gray-400 mb-4">Upload your first document to get started with RAG</p>
           <button
             onClick={handleUpload}
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -100,7 +100,7 @@ export function DocumentsPage() {
           {documents.map((doc) => (
             <div
               key={doc.id}
-              className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+              className="bg-[#161b22] border border-[#30363d] rounded-lg p-4 hover:border-blue-500 transition-colors"
               data-testid={`card-document-${doc.id}`}
             >
               <div className="flex items-start justify-between mb-3">
@@ -113,10 +113,10 @@ export function DocumentsPage() {
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-1" data-testid={`text-title-${doc.id}`}>
+              <h3 className="font-semibold mb-1" data-testid={`text-title-${doc.id}`}>
                 {doc.title}
               </h3>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-gray-400">
                 <span className={`px-2 py-1 rounded text-xs ${
                   doc.status === 'completed' ? 'bg-green-100 text-green-700' :
                   doc.status === 'processing' ? 'bg-blue-100 text-blue-700' :
@@ -127,7 +127,7 @@ export function DocumentsPage() {
                 {doc.fileType && <span>• {doc.fileType}</span>}
               </div>
               {doc.createdAt && (
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-gray-500 mt-2">
                   {new Date(doc.createdAt).toLocaleDateString()}
                 </p>
               )}

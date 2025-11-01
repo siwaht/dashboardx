@@ -52,11 +52,11 @@ export function DataSourcesPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900" data-testid="text-page-title">Data Sources</h1>
-          <p className="text-gray-600 mt-1">Connect external data sources</p>
+          <h1 className="text-3xl font-bold" data-testid="text-page-title">Data Sources</h1>
+          <p className="text-gray-400 mt-1">Connect external data sources</p>
         </div>
         <button
           onClick={handleCreate}
@@ -73,10 +73,10 @@ export function DataSourcesPage() {
           <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
         </div>
       ) : dataSources.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center" data-testid="text-empty-state">
+        <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-12 text-center" data-testid="text-empty-state">
           <Database className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No data sources yet</h3>
-          <p className="text-gray-600 mb-4">Connect databases, APIs, or file systems</p>
+          <h3 className="text-lg font-medium mb-2">No data sources yet</h3>
+          <p className="text-gray-400 mb-4">Connect databases, APIs, or file systems</p>
           <button
             onClick={handleCreate}
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -90,7 +90,7 @@ export function DataSourcesPage() {
           {dataSources.map((source) => (
             <div
               key={source.id}
-              className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+              className="bg-[#161b22] border border-[#30363d] rounded-lg p-4 hover:border-blue-500 transition-colors"
               data-testid={`card-source-${source.id}`}
             >
               <div className="flex items-start justify-between mb-3">
@@ -111,7 +111,7 @@ export function DataSourcesPage() {
                   </button>
                 </div>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-1" data-testid={`text-name-${source.id}`}>
+              <h3 className="font-semibold mb-1" data-testid={`text-name-${source.id}`}>
                 {source.name}
               </h3>
               <div className="flex items-center gap-2 text-sm mb-2">
