@@ -20,6 +20,7 @@ export const userProfiles = pgTable("user_profiles", {
   id: uuid("id").primaryKey(),
   tenantId: uuid("tenant_id").notNull().references(() => tenants.id, { onDelete: "cascade" }),
   email: text("email").notNull().unique(),
+  passwordHash: text("password_hash"),
   fullName: text("full_name"),
   role: text("role").notNull().default("user"),
   isActive: boolean("is_active").default(true),

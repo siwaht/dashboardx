@@ -1,7 +1,14 @@
 import { QueryClient } from "@tanstack/react-query";
 
 async function defaultFetcher(url: string) {
-  const res = await fetch(url);
+  const token = localStorage.getItem('session_token');
+  const headers: HeadersInit = {};
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  const res = await fetch(url, { headers });
   if (!res.ok) {
     const error = await res.text();
     throw new Error(error || `Request failed: ${res.status}`);
@@ -10,12 +17,19 @@ async function defaultFetcher(url: string) {
 }
 
 export async function apiRequest(url: string, options?: RequestInit) {
+  const token = localStorage.getItem('session_token');
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...options?.headers,
+  };
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
   const res = await fetch(url, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
+    headers,
   });
   
   if (!res.ok) {

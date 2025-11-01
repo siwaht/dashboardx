@@ -110,6 +110,7 @@ export class MemStorage implements IStorage {
   async createUser(data: InsertUserProfile) {
     const user: UserProfile = {
       ...data,
+      passwordHash: data.passwordHash ?? null,
       fullName: data.fullName ?? null,
       role: data.role ?? 'user',
       isActive: data.isActive ?? true,
@@ -274,6 +275,7 @@ export class MemStorage implements IStorage {
     const agent: CustomAgent = {
       id: crypto.randomUUID(),
       ...data,
+      config: data.config ?? {},
       description: data.description ?? null,
       capabilities: data.capabilities ?? {},
       status: data.status ?? 'inactive',

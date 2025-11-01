@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import type { IStorage } from "./storage.js";
 import {
   insertUserProfileSchema,
@@ -7,14 +7,159 @@ import {
   insertChatMessageSchema,
   insertDataSourceSchema,
   insertCustomAgentSchema,
-  insertAgentExecutionSchema
+  insertAgentExecutionSchema,
+  insertTenantSchema
 } from "../shared/schema.js";
+import { hashPassword, comparePasswords, createSession, getSession, deleteSession } from "./auth.js";
+
+// Middleware to check authentication
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.replace("Bearer ", "");
+  
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized - No token provided" });
+  }
+  
+  const session = getSession(token);
+  if (!session) {
+    return res.status(401).json({ error: "Unauthorized - Invalid or expired session" });
+  }
+  
+  (req as any).session = session;
+  next();
+}
 
 export function registerRoutes(app: Express, storage: IStorage) {
   
   // Health check
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
+  // Auth routes
+  app.post("/api/auth/signup", async (req, res) => {
+    try {
+      const { email, password, fullName, tenantName } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+      }
+      
+      // Check if user exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ error: "User already exists" });
+      }
+      
+      // Create tenant
+      const tenant = await storage.createTenant({
+        name: tenantName || `${email}'s Organization`,
+        settings: {}
+      });
+      
+      // Hash password and create user
+      const hashedPassword = await hashPassword(password);
+      const user = await storage.createUser({
+        id: crypto.randomUUID(),
+        tenantId: tenant.id,
+        email,
+        fullName: fullName || null,
+        role: "admin",
+        isActive: true,
+        passwordHash: hashedPassword
+      });
+      
+      // Create session
+      const sessionId = createSession(user.id, tenant.id);
+      
+      res.status(201).json({
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          tenantId: user.tenantId,
+          isActive: user.isActive
+        },
+        session: { access_token: sessionId }
+      });
+    } catch (error) {
+      console.error("Signup error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to create account" });
+    }
+  });
+
+  app.post("/api/auth/signin", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+      }
+      
+      // Get user
+      const user = await storage.getUserByEmail(email);
+      if (!user || !user.passwordHash) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+      
+      // Verify password
+      const isValid = await comparePasswords(password, user.passwordHash);
+      if (!isValid) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+      
+      // Create session
+      const sessionId = createSession(user.id, user.tenantId);
+      
+      res.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          tenantId: user.tenantId,
+          isActive: user.isActive
+        },
+        session: { access_token: sessionId }
+      });
+    } catch (error) {
+      console.error("Signin error:", error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to sign in" });
+    }
+  });
+
+  app.post("/api/auth/signout", requireAuth, (req, res) => {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    if (token) {
+      deleteSession(token);
+    }
+    res.json({ message: "Signed out successfully" });
+  });
+
+  app.get("/api/auth/session", requireAuth, async (req, res) => {
+    try {
+      const session = (req as any).session;
+      const user = await storage.getUserById(session.userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      res.json({
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          tenantId: user.tenantId,
+          isActive: user.isActive
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get session" });
+    }
   });
 
   // User routes
