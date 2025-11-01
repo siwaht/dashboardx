@@ -87,6 +87,7 @@ export class MemStorage implements IStorage {
     const tenant: Tenant = {
       id: crypto.randomUUID(),
       ...data,
+      settings: data.settings ?? {},
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -109,6 +110,9 @@ export class MemStorage implements IStorage {
   async createUser(data: InsertUserProfile) {
     const user: UserProfile = {
       ...data,
+      fullName: data.fullName ?? null,
+      role: data.role ?? 'user',
+      isActive: data.isActive ?? true,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -136,6 +140,12 @@ export class MemStorage implements IStorage {
     const doc: Document = {
       id: crypto.randomUUID(),
       ...data,
+      sourceUrl: data.sourceUrl ?? null,
+      fileType: data.fileType ?? null,
+      fileSize: data.fileSize ?? null,
+      status: data.status ?? 'pending',
+      metadata: data.metadata ?? {},
+      uploadedBy: data.uploadedBy ?? null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -163,6 +173,8 @@ export class MemStorage implements IStorage {
     const chunk: DocumentChunk = {
       id: crypto.randomUUID(),
       ...data,
+      embedding: data.embedding ?? null,
+      metadata: data.metadata ?? {},
       createdAt: new Date()
     };
     this.chunks.set(chunk.id, chunk);
@@ -181,6 +193,7 @@ export class MemStorage implements IStorage {
     const session: ChatSession = {
       id: crypto.randomUUID(),
       ...data,
+      title: data.title ?? 'New Chat',
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -208,6 +221,7 @@ export class MemStorage implements IStorage {
     const message: ChatMessage = {
       id: crypto.randomUUID(),
       ...data,
+      metadata: data.metadata ?? {},
       createdAt: new Date()
     };
     this.messages.set(message.id, message);
@@ -226,6 +240,9 @@ export class MemStorage implements IStorage {
     const dataSource: DataSource = {
       id: crypto.randomUUID(),
       ...data,
+      config: data.config ?? {},
+      status: data.status ?? 'inactive',
+      lastSync: data.lastSync ?? null,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -257,6 +274,13 @@ export class MemStorage implements IStorage {
     const agent: CustomAgent = {
       id: crypto.randomUUID(),
       ...data,
+      description: data.description ?? null,
+      capabilities: data.capabilities ?? {},
+      status: data.status ?? 'inactive',
+      isPublic: data.isPublic ?? false,
+      version: data.version ?? '1.0.0',
+      tags: data.tags ?? [],
+      metadata: data.metadata ?? {},
       createdAt: new Date(),
       updatedAt: new Date(),
       lastExecutedAt: null
@@ -285,6 +309,14 @@ export class MemStorage implements IStorage {
     const execution: AgentExecution = {
       id: crypto.randomUUID(),
       ...data,
+      sessionId: data.sessionId ?? null,
+      outputData: data.outputData ?? null,
+      status: data.status ?? 'running',
+      executionTimeMs: data.executionTimeMs ?? null,
+      tokensUsed: data.tokensUsed ?? null,
+      errorMessage: data.errorMessage ?? null,
+      errorStack: data.errorStack ?? null,
+      metadata: data.metadata ?? {},
       startedAt: new Date(),
       completedAt: null
     };
