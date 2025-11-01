@@ -63,7 +63,10 @@ export function LoginPage() {
           <button
             type="button"
             className={`flex-1 py-2 ${!isSignUp ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
-            onClick={() => setIsSignUp(false)}
+            onClick={() => {
+              setIsSignUp(false);
+              setError('');
+            }}
             data-testid="tab-signin"
           >
             Sign In
@@ -71,7 +74,10 @@ export function LoginPage() {
           <button
             type="button"
             className={`flex-1 py-2 ${isSignUp ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
-            onClick={() => setIsSignUp(true)}
+            onClick={() => {
+              setIsSignUp(true);
+              setError('');
+            }}
             data-testid="tab-signup"
           >
             Sign Up
