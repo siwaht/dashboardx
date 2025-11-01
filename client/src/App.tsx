@@ -37,7 +37,7 @@ function App() {
             <h3 className="text-lg font-semibold text-blue-900 mb-2">Migration Complete! 🎉</h3>
             <p className="text-blue-700">
               Your Bolt project has been successfully migrated to Replit's fullstack JavaScript environment.
-              The Express backend is running with in-memory storage, and you're ready to start building!
+              The Express backend is running with Neon PostgreSQL database (with pgvector support), and you're ready to start building!
             </p>
           </div>
         </div>
