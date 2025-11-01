@@ -12,6 +12,7 @@ export function DataSourcesPage() {
 
   const { data: dataSources = [], isLoading } = useQuery<DataSource[]>({
     queryKey: ['/api/data-sources', config?.tenantId],
+    queryFn: () => apiRequest(`/api/data-sources?tenantId=${config?.tenantId}`),
     enabled: !!config,
   });
 

@@ -12,7 +12,7 @@ class APIClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    this.baseURL = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8000';
   }
 
   /**
@@ -370,7 +370,7 @@ class APIClient {
    */
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
     try {
-      const response = await fetch(`${this.baseURL}/health`);
+      const response = await fetch(`${this.baseURL}/api/health`);
       return response.json();
     } catch (error) {
       throw new Error('Backend is not reachable');
