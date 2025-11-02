@@ -66,7 +66,7 @@ export function ChatInterface({ sessionId, onNewSession }: ChatInterfaceProps) {
       return null;
     }
 
-    return data.id;
+    return (data as { id: string }).id;
   };
 
   const sendMessage = async (e: React.FormEvent) => {
@@ -87,29 +87,20 @@ export function ChatInterface({ sessionId, onNewSession }: ChatInterfaceProps) {
     setAgentState('Processing your request...');
 
     try {
-      const { error: userMsgError } = await supabase
+      const { data: userMessageData, error: userMsgError } = await supabase
         .from('chat_messages')
         .insert({
           session_id: currentSessionId,
           tenant_id: profile.tenant_id,
           role: 'user',
           content: userMessage,
-        });
+        })
+        .select();
 
       if (userMsgError) throw userMsgError;
+      if (!userMessageData) throw new Error('No data returned from user message insert');
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          session_id: currentSessionId!,
-          tenant_id: profile.tenant_id,
-          role: 'user',
-          content: userMessage,
-          metadata: {},
-          created_at: new Date().toISOString(),
-        },
-      ]);
+      setMessages((prev) => [...prev, ...userMessageData]);
 
       setAgentState('Thinking...');
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -119,7 +110,7 @@ export function ChatInterface({ sessionId, onNewSession }: ChatInterfaceProps) {
 
       const assistantResponse = `I've received your message: "${userMessage}". The RAG agent orchestration backend is being implemented next. This will include vector similarity search, LangGraph workflow execution, and streaming responses.`;
 
-      const { error: assistantMsgError } = await supabase
+      const { data: assistantMessageData, error: assistantMsgError } = await supabase
         .from('chat_messages')
         .insert({
           session_id: currentSessionId,
@@ -127,22 +118,13 @@ export function ChatInterface({ sessionId, onNewSession }: ChatInterfaceProps) {
           role: 'assistant',
           content: assistantResponse,
           metadata: { agent_state: 'completed' },
-        });
+        })
+        .select();
 
       if (assistantMsgError) throw assistantMsgError;
+      if (!assistantMessageData) throw new Error('No data returned from assistant message insert');
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          session_id: currentSessionId!,
-          tenant_id: profile.tenant_id,
-          role: 'assistant',
-          content: assistantResponse,
-          metadata: { agent_state: 'completed' },
-          created_at: new Date().toISOString(),
-        },
-      ]);
+      setMessages((prev) => [...prev, ...assistantMessageData]);
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {

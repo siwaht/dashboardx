@@ -6,12 +6,21 @@
   "scripts": {
     "dev": "tsx watch --clear-screen=false --tsconfig tsconfig.node.json --ignore '**/*.timestamp-*' --ignore 'client/**' --ignore 'dist/**' --ignore '*.log' --ignore 'node_modules/**' server/index.ts",
     "build": "vite build",
+    "build:backend": "cd backend && pip install -r requirements.txt",
+    "build:docker": "docker-compose build",
     "start": "NODE_ENV=production tsx server/index.ts",
+    "start:backend": "cd backend && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}",
+    "start:docker": "docker-compose up -d",
+    "deploy:replit": "npm run build",
+    "deploy:render": "npm run build",
+    "deploy:vercel": "vercel --prod",
+    "deploy:railway": "railway up",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json"
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "health": "curl -f http://localhost:8000/health || exit 1"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -19,6 +28,7 @@
     "@supabase/supabase-js": "^2.57.4",
     "@tanstack/react-query": "^5.90.5",
     "@types/express": "^5.0.5",
+    "@types/recharts": "^1.8.29",
     "@types/ws": "^8.18.1",
     "drizzle-kit": "^0.31.6",
     "drizzle-orm": "^0.44.7",
@@ -30,8 +40,9 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.66.0",
     "react-router-dom": "^7.9.4",
+    "recharts": "^3.3.0",
     "tsx": "^4.20.6",
-    "wouter": "^3.7.1",
+    "victory": "^37.3.6",
     "ws": "^8.18.3",
     "zod": "^4.1.12"
   },

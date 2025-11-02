@@ -12,7 +12,7 @@ class APIClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+    this.baseURL = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8000';
   }
 
   /**
@@ -58,7 +58,7 @@ class APIClient {
   /**
    * POST request
    */
-  async post<T>(endpoint: string, body: any): Promise<T> {
+  async post<T>(endpoint: string, body: unknown): Promise<T> {
     const headers = await this.getAuthHeaders();
 
     const response = await fetch(`${this.baseURL}${endpoint}`, {
@@ -93,7 +93,7 @@ class APIClient {
   /**
    * PUT request
    */
-  async put<T>(endpoint: string, body: any): Promise<T> {
+  async put<T>(endpoint: string, body: unknown): Promise<T> {
     const headers = await this.getAuthHeaders();
 
     const response = await fetch(`${this.baseURL}${endpoint}`, {
@@ -122,7 +122,7 @@ class APIClient {
   /**
    * Upload file
    */
-  async uploadFile(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<any> {
+  async uploadFile(endpoint: string, file: File, additionalData?: Record<string, unknown>): Promise<unknown> {
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session?.access_token) {
@@ -161,28 +161,28 @@ class APIClient {
   /**
    * Get chat history for a session
    */
-  async getChatHistory(sessionId: string): Promise<any> {
+  async getChatHistory(sessionId: string): Promise<unknown> {
     return this.get(`/chat/history/${sessionId}`);
   }
 
   /**
    * Create a new chat session
    */
-  async createChatSession(title?: string): Promise<any> {
+  async createChatSession(title?: string): Promise<unknown> {
     return this.post('/chat/sessions', { title: title || 'New Chat' });
   }
 
   /**
    * Get all chat sessions for the user
    */
-  async getChatSessions(): Promise<any> {
+  async getChatSessions(): Promise<unknown> {
     return this.get('/chat/sessions');
   }
 
   /**
    * Delete a chat session
    */
-  async deleteChatSession(sessionId: string): Promise<any> {
+  async deleteChatSession(sessionId: string): Promise<unknown> {
     return this.delete(`/chat/sessions/${sessionId}`);
   }
 
@@ -191,7 +191,7 @@ class APIClient {
   /**
    * Upload a document
    */
-  async uploadDocument(file: File, metadata?: Record<string, any>): Promise<any> {
+  async uploadDocument(file: File, metadata?: Record<string, unknown>): Promise<unknown> {
     return this.uploadFile('/documents/upload', file, metadata);
   }
 
@@ -370,7 +370,7 @@ class APIClient {
    */
   async healthCheck(): Promise<{ status: string; timestamp: string }> {
     try {
-      const response = await fetch(`${this.baseURL}/health`);
+      const response = await fetch(`${this.baseURL}/api/health`);
       return response.json();
     } catch (error) {
       throw new Error('Backend is not reachable');

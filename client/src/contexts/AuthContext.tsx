@@ -92,22 +92,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (authError) throw authError;
     if (!authData.user) throw new Error('User creation failed');
 
-    const { data: tenant, error: tenantError } = await supabase
+    const { data: tenantData, error: tenantError } = await supabase
       .from('tenants')
-      .insert({ name: tenantName })
+      .insert({ name: tenantName } as any)
       .select()
       .single();
 
     if (tenantError) throw tenantError;
+    const tenant = tenantData as { id: string };
 
     const { error: profileError } = await supabase
       .from('user_profiles')
       .insert({
         id: authData.user.id,
-        tenant_id: tenant.id,
+        tenant_id: (tenant as any)?.id,
         full_name: fullName,
         role: 'admin',
-      });
+      } as any);
 
     if (profileError) throw profileError;
   };

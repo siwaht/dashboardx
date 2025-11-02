@@ -1,4 +1,7 @@
 modules = ["python-3.12", "nodejs-20", "web", "postgresql-16"]
+run = "npm run dev"
+entrypoint = "server/index.ts"
+
 [agent]
 expertMode = true
 integrations = ["javascript_database:1.0.0"]
@@ -10,6 +13,11 @@ channel = "stable-25_05"
 deploymentTarget = "autoscale"
 run = ["npm", "run", "start"]
 build = ["npm", "run", "build"]
+
+[env]
+PORT = "5173"
+REPL_SLUG = "${REPL_SLUG}"
+REPL_OWNER = "${REPL_OWNER}"
 
 [workflows]
 runButton = "Project"

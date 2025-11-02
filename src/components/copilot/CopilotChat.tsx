@@ -215,7 +215,7 @@ export function CopilotChat({
         )}
       </form>
 
-      <style jsx>{`
+      <style>{`
         .copilot-chat {
           display: flex;
           flex-direction: column;

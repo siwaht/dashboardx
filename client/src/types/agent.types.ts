@@ -11,7 +11,7 @@ export interface AgentMessage {
   id: string;
   role: MessageRole;
   content: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   created_at: string;
 }
 
@@ -38,8 +38,8 @@ export interface Citation {
 
 export interface ToolCall {
   tool_name: string;
-  arguments: Record<string, any>;
-  result?: any;
+  arguments: Record<string, unknown>;
+  result?: unknown;
   timestamp: string;
 }
 
@@ -96,7 +96,7 @@ export interface AgentState {
 
 export interface StreamEvent {
   type: 'state' | 'token' | 'thought' | 'document' | 'citation' | 'done' | 'error';
-  data: any;
+  data: unknown;
   timestamp: string;
 }
 
@@ -154,7 +154,7 @@ export interface ErrorEvent extends StreamEvent {
   data: {
     message: string;
     code: string;
-    details?: any;
+    details?: unknown;
   };
 }
 
@@ -164,7 +164,7 @@ export type ChartType = 'line' | 'bar' | 'pie' | 'scatter' | 'area';
 export interface ChartData {
   type: ChartType;
   title: string;
-  data: any[];
+  data: unknown[];
   config?: {
     xAxis?: string;
     yAxis?: string;
@@ -188,14 +188,14 @@ export interface CopilotAction {
     description: string;
     required?: boolean;
   }>;
-  handler: (args: any) => Promise<any>;
+  handler: (args: unknown) => Promise<unknown>;
 }
 
 // API Request/Response types
 export interface ChatRequest {
   message: string;
   session_id?: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
 }
 
 export interface ChatResponse {

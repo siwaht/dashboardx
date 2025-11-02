@@ -12,6 +12,7 @@ export function AgentsPage() {
 
   const { data: agents = [], isLoading } = useQuery<CustomAgent[]>({
     queryKey: ['/api/agents', config?.tenantId],
+    queryFn: () => apiRequest(`/api/agents?tenantId=${config?.tenantId}`),
     enabled: !!config,
   });
 
