@@ -2,8 +2,8 @@ import { QueryClient } from "@tanstack/react-query";
 
 async function defaultFetcher(url: string) {
   const token = localStorage.getItem('session_token');
-  const headers: HeadersInit = {};
-  
+  const headers: Record<string, string> = {};
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -18,11 +18,11 @@ async function defaultFetcher(url: string) {
 
 export async function apiRequest(url: string, options?: RequestInit) {
   const token = localStorage.getItem('session_token');
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...options?.headers,
+    ...(options?.headers as Record<string, string> || {}),
   };
-  
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }

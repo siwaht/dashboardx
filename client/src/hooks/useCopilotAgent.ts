@@ -66,7 +66,7 @@ export function useCopilotAgent(): UseCopilotAgentReturn {
           // Send authentication
           ws.send(JSON.stringify({
             type: 'auth',
-            token: user.access_token || 'demo-token',
+            token: (user as any).access_token || 'demo-token',
             user_id: user.id,
             tenant_id: user.user_metadata?.tenant_id || 'demo-tenant',
             email: user.email,
