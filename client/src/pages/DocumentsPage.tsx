@@ -12,6 +12,7 @@ export function DocumentsPage() {
 
   const { data: documents = [], isLoading } = useQuery<Document[]>({
     queryKey: ['/api/documents', config?.tenantId],
+    queryFn: () => apiRequest(`/api/documents?tenantId=${config?.tenantId}`),
     enabled: !!config,
   });
 

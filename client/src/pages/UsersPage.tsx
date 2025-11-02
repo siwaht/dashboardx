@@ -62,23 +62,15 @@ export function UsersPage() {
   };
 
   const handleCreateUser = async (userData: any) => {
-    try {
-      await apiClient.createUser(userData);
-      setShowCreateModal(false);
-      loadUsers();
-    } catch (err) {
-      throw err;
-    }
+    await apiClient.createUser(userData);
+    setShowCreateModal(false);
+    loadUsers();
   };
 
   const handleUpdateUser = async (userId: string, userData: any) => {
-    try {
-      await apiClient.updateUser(userId, userData);
-      setEditingUser(null);
-      loadUsers();
-    } catch (err) {
-      throw err;
-    }
+    await apiClient.updateUser(userId, userData);
+    setEditingUser(null);
+    loadUsers();
   };
 
   const handleToggleStatus = async (user: User) => {
@@ -482,12 +474,15 @@ function DeleteConfirmDialog({
   onConfirm: () => Promise<void>;
 }) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleConfirm = async () => {
     setLoading(true);
+    setError(null);
     try {
       await onConfirm();
     } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete user');
       setLoading(false);
     }
   };
@@ -497,13 +492,20 @@ function DeleteConfirmDialog({
       <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl animate-scale-in relative overflow-hidden">
         {/* Decorative gradient */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-rose-500"></div>
-        
+
         <div className="flex items-center gap-3 mb-6">
           <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center shadow-lg">
             <AlertCircle className="text-white" size={24} />
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Delete User</h2>
         </div>
+
+        {error && (
+          <div className="bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-200 rounded-xl p-4 mb-4 text-red-800 text-sm font-medium flex items-center gap-2 animate-fade-in">
+            <AlertCircle size={18} className="flex-shrink-0" />
+            {error}
+          </div>
+        )}
 
         <p className="text-gray-700 mb-6 text-lg">
           Are you sure you want to delete <strong className="text-red-600">{user.email}</strong>? This action cannot be undone.

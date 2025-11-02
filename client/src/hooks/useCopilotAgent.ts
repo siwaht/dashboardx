@@ -36,7 +36,7 @@ interface UseCopilotAgentReturn {
 }
 
 export function useCopilotAgent(): UseCopilotAgentReturn {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [agentState, setAgentState] = useState<AgentState | null>(null);
@@ -54,7 +54,7 @@ export function useCopilotAgent(): UseCopilotAgentReturn {
       try {
         // Determine WebSocket URL
         const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsHost = import.meta.env.VITE_BACKEND_URL?.replace('http://', '').replace('https://', '') || 'localhost:8000';
+        const wsHost = import.meta.env.VITE_BACKEND_API_URL?.replace('http://', '').replace('https://', '') || 'localhost:8000';
         const wsUrl = `${wsProtocol}//${wsHost}/api/copilotkit/ws`;
 
         const ws = new WebSocket(wsUrl);
@@ -66,7 +66,7 @@ export function useCopilotAgent(): UseCopilotAgentReturn {
           // Send authentication
           ws.send(JSON.stringify({
             type: 'auth',
-            token: (user as any).access_token || 'demo-token',
+            token: session?.access_token || 'demo-token',
             user_id: user.id,
             tenant_id: user.user_metadata?.tenant_id || 'demo-tenant',
             email: user.email,

@@ -60,7 +60,7 @@ export function useStreamingResponse(options: UseStreamingResponseOptions = {}) 
   });
 
   const eventSourceRef = useRef<EventSource | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
    * Clean up event source and timeouts
@@ -211,9 +211,6 @@ export function useStreamingResponse(options: UseStreamingResponseOptions = {}) 
     });
 
     try {
-      // Get authentication token (for future use)
-      // const token = localStorage.getItem('supabase.auth.token');
-
       // Build URL with query parameters
       const baseUrl = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8000';
       const params = new URLSearchParams({

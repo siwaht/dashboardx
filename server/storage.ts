@@ -346,6 +346,7 @@ export class DbStorage implements IStorage {
 
   async createTenant(data: InsertTenant) {
     const result = await this.db.insert(schema.tenants).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create tenant");
     return result[0];
   }
 
@@ -365,6 +366,7 @@ export class DbStorage implements IStorage {
 
   async createUser(data: InsertUserProfile) {
     const result = await this.db.insert(schema.userProfiles).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create user");
     return result[0];
   }
 
@@ -385,6 +387,7 @@ export class DbStorage implements IStorage {
 
   async createDocument(data: InsertDocument) {
     const result = await this.db.insert(schema.documents).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create document");
     return result[0];
   }
 
@@ -404,6 +407,7 @@ export class DbStorage implements IStorage {
 
   async createDocumentChunk(data: InsertDocumentChunk) {
     const result = await this.db.insert(schema.documentChunks).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create document chunk");
     return result[0];
   }
 
@@ -418,6 +422,7 @@ export class DbStorage implements IStorage {
 
   async createChatSession(data: InsertChatSession) {
     const result = await this.db.insert(schema.chatSessions).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create chat session");
     return result[0];
   }
 
@@ -437,6 +442,7 @@ export class DbStorage implements IStorage {
 
   async createChatMessage(data: InsertChatMessage) {
     const result = await this.db.insert(schema.chatMessages).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create chat message");
     return result[0];
   }
 
@@ -451,6 +457,7 @@ export class DbStorage implements IStorage {
 
   async createDataSource(data: InsertDataSource) {
     const result = await this.db.insert(schema.dataSources).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create data source");
     return result[0];
   }
 
@@ -475,6 +482,7 @@ export class DbStorage implements IStorage {
 
   async createCustomAgent(data: InsertCustomAgent) {
     const result = await this.db.insert(schema.customAgents).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create custom agent");
     return result[0];
   }
 
@@ -494,6 +502,7 @@ export class DbStorage implements IStorage {
 
   async createAgentExecution(data: InsertAgentExecution) {
     const result = await this.db.insert(schema.agentExecutions).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create agent execution");
     return result[0];
   }
 
