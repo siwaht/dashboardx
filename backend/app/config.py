@@ -14,14 +14,19 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
 
     # ==================== Supabase ====================
-    supabase_url: str = Field(..., env="SUPABASE_URL")
-    supabase_service_key: str = Field(..., env="SUPABASE_SERVICE_KEY")
-    supabase_service_role_key: str = Field(..., env="SUPABASE_SERVICE_ROLE_KEY")
-    supabase_jwt_secret: str = Field(..., env="SUPABASE_JWT_SECRET")
-    supabase_db_connection: str = Field(..., env="SUPABASE_DB_CONNECTION")
+    supabase_url: Optional[str] = Field(None, env="SUPABASE_URL")
+    supabase_service_key: Optional[str] = Field(None, env="SUPABASE_SERVICE_KEY")
+    supabase_service_role_key: Optional[str] = Field(None, env="SUPABASE_SERVICE_ROLE_KEY")
+    supabase_jwt_secret: Optional[str] = Field(None, env="SUPABASE_JWT_SECRET")
+    supabase_db_connection: Optional[str] = Field(None, env="SUPABASE_DB_CONNECTION")
+
+    # ==================== MongoDB ====================
+    mongodb_url: str = Field(..., env="MONGODB_URL")
+    mongodb_database: str = Field("dashboardx", env="MONGODB_DATABASE")
+    mongodb_collection: str = Field("dashboardx", env="MONGODB_COLLECTION")
 
     # ==================== OpenAI ====================
-    openai_api_key: str = Field(..., env="OPENAI_API_KEY")
+    openai_api_key: Optional[str] = Field(None, env="OPENAI_API_KEY")
     openai_organization_id: Optional[str] = Field(None, env="OPENAI_ORGANIZATION_ID")
     openai_embedding_model: str = Field(
         "text-embedding-3-small", env="OPENAI_EMBEDDING_MODEL"

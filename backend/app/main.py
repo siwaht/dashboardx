@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 import time
 
 from app.config import settings
+from app.mongodb import MongoDB
 
 # Configure logging
 logging.basicConfig(
@@ -32,7 +33,15 @@ async def lifespan(app: FastAPI):
     logger.info("Starting Agentic RAG Platform Backend...")
     logger.info(f"Environment: {settings.sentry_environment}")
     logger.info(f"Debug mode: {settings.debug}")
-    
+
+    # Initialize MongoDB
+    try:
+        await MongoDB.connect()
+        logger.info("MongoDB connected successfully")
+    except Exception as e:
+        logger.error(f"Failed to connect to MongoDB: {e}")
+        logger.warning("Application starting without MongoDB connection")
+
     # Initialize Sentry if configured
     if settings.sentry_dsn:
         try:
@@ -57,9 +66,16 @@ async def lifespan(app: FastAPI):
     logger.info("Backend startup complete")
     
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Agentic RAG Platform Backend...")
+
+    # Close MongoDB connection
+    try:
+        await MongoDB.close()
+        logger.info("MongoDB connection closed")
+    except Exception as e:
+        logger.error(f"Error closing MongoDB connection: {e}")
 
 
 # Create FastAPI application
