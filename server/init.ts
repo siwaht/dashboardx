@@ -1,4 +1,5 @@
 import type { IStorage } from "./storage.js";
+import { hashPassword } from "./auth.js";
 
 export interface DemoData {
   tenantId: string;
@@ -6,7 +7,47 @@ export interface DemoData {
   sessionId: string;
 }
 
+async function initializeAdminUser(storage: IStorage): Promise<void> {
+  try {
+    // Check if admin user already exists
+    const existingUser = await storage.getUserByEmail("cc@siwaht.com");
+    if (existingUser) {
+      console.log("Admin user cc@siwaht.com already exists");
+      return;
+    }
+
+    // Create tenant for admin user
+    const tenant = await storage.createTenant({
+      name: "SIWAHT Organization",
+      settings: {}
+    });
+
+    // Hash the password
+    const hashedPassword = await hashPassword("Hola173!");
+
+    // Create admin user
+    await storage.createUser({
+      id: crypto.randomUUID(),
+      tenantId: tenant.id,
+      email: "cc@siwaht.com",
+      fullName: "CC Admin",
+      role: "admin",
+      isActive: true,
+      passwordHash: hashedPassword
+    });
+
+    console.log(`Admin user created:
+      Email: cc@siwaht.com
+      Tenant: ${tenant.id}
+      Role: admin`);
+  } catch (error) {
+    console.error("Error creating admin user:", error);
+  }
+}
+
 export async function initializeDemoData(storage: IStorage): Promise<DemoData> {
+  // Initialize admin user first
+  await initializeAdminUser(storage);
   try {
     // Try to get existing demo user
     const existingUser = await storage.getUserByEmail("demo@example.com");
