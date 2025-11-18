@@ -58,7 +58,7 @@ except ImportError as e:
 try:
     from app.agents.adapters.n8n_adapter import N8NAdapter
     from app.agents.registry import AgentRegistry
-    
+
     # Register n8n adapter
     AgentRegistry.register(
         agent_id="n8n",
@@ -73,16 +73,85 @@ try:
         }
     )
     logger.info("Registered n8n adapter")
-    
+
 except ImportError as e:
     logger.warning(f"Could not import n8n adapter: {e}")
+
+try:
+    from app.agents.adapters.openai_adapter import OpenAIAdapter
+    from app.agents.registry import AgentRegistry
+
+    # Register OpenAI adapter
+    AgentRegistry.register(
+        agent_id="openai",
+        agent_class=OpenAIAdapter,
+        metadata={
+            "name": "OpenAI Direct",
+            "description": "Direct OpenAI API integration (GPT-4, GPT-3.5, etc.)",
+            "type": "custom",
+            "enabled": True,
+            "priority": 4,
+            "version": "1.0.0"
+        }
+    )
+    logger.info("Registered OpenAI adapter")
+
+except ImportError as e:
+    logger.warning(f"Could not import OpenAI adapter: {e}")
+
+try:
+    from app.agents.adapters.anthropic_adapter import AnthropicAdapter
+    from app.agents.registry import AgentRegistry
+
+    # Register Anthropic adapter
+    AgentRegistry.register(
+        agent_id="anthropic",
+        agent_class=AnthropicAdapter,
+        metadata={
+            "name": "Anthropic Claude",
+            "description": "Direct Anthropic Claude API integration",
+            "type": "custom",
+            "enabled": True,
+            "priority": 5,
+            "version": "1.0.0"
+        }
+    )
+    logger.info("Registered Anthropic adapter")
+
+except ImportError as e:
+    logger.warning(f"Could not import Anthropic adapter: {e}")
+
+try:
+    from app.agents.adapters.http_adapter import HTTPAdapter
+    from app.agents.registry import AgentRegistry
+
+    # Register HTTP adapter
+    AgentRegistry.register(
+        agent_id="http",
+        agent_class=HTTPAdapter,
+        metadata={
+            "name": "Custom HTTP Endpoint",
+            "description": "Universal adapter for any HTTP/REST AI endpoint",
+            "type": "custom",
+            "enabled": True,
+            "priority": 6,
+            "version": "1.0.0"
+        }
+    )
+    logger.info("Registered HTTP adapter")
+
+except ImportError as e:
+    logger.warning(f"Could not import HTTP adapter: {e}")
 
 
 # Export all adapters
 __all__ = [
     "LangGraphAdapter",
     "LangChainAdapter",
-    "N8NAdapter"
+    "N8NAdapter",
+    "OpenAIAdapter",
+    "AnthropicAdapter",
+    "HTTPAdapter"
 ]
 
 
