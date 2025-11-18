@@ -143,6 +143,72 @@ try:
 except ImportError as e:
     logger.warning(f"Could not import HTTP adapter: {e}")
 
+try:
+    from app.agents.adapters.webhook_adapter import WebhookAdapter
+    from app.agents.registry import AgentRegistry
+
+    # Register Webhook adapter
+    AgentRegistry.register(
+        agent_id="webhook",
+        agent_class=WebhookAdapter,
+        metadata={
+            "name": "Webhook",
+            "description": "Simple webhook-based agent integration",
+            "type": "custom",
+            "enabled": True,
+            "priority": 7,
+            "version": "1.0.0"
+        }
+    )
+    logger.info("Registered Webhook adapter")
+
+except ImportError as e:
+    logger.warning(f"Could not import Webhook adapter: {e}")
+
+try:
+    from app.agents.adapters.websocket_adapter import WebSocketAdapter
+    from app.agents.registry import AgentRegistry
+
+    # Register WebSocket adapter
+    AgentRegistry.register(
+        agent_id="websocket",
+        agent_class=WebSocketAdapter,
+        metadata={
+            "name": "WebSocket",
+            "description": "Real-time WebSocket connection to agents",
+            "type": "custom",
+            "enabled": True,
+            "priority": 8,
+            "version": "1.0.0"
+        }
+    )
+    logger.info("Registered WebSocket adapter")
+
+except ImportError as e:
+    logger.warning(f"Could not import WebSocket adapter: {e}")
+
+try:
+    from app.agents.adapters.mcp_adapter import MCPAdapter
+    from app.agents.registry import AgentRegistry
+
+    # Register MCP adapter
+    AgentRegistry.register(
+        agent_id="mcp",
+        agent_class=MCPAdapter,
+        metadata={
+            "name": "MCP (Model Context Protocol)",
+            "description": "Anthropic's Model Context Protocol for tool/resource integration",
+            "type": "custom",
+            "enabled": True,
+            "priority": 9,
+            "version": "1.0.0"
+        }
+    )
+    logger.info("Registered MCP adapter")
+
+except ImportError as e:
+    logger.warning(f"Could not import MCP adapter: {e}")
+
 
 # Export all adapters
 __all__ = [
@@ -151,7 +217,10 @@ __all__ = [
     "N8NAdapter",
     "OpenAIAdapter",
     "AnthropicAdapter",
-    "HTTPAdapter"
+    "HTTPAdapter",
+    "WebhookAdapter",
+    "WebSocketAdapter",
+    "MCPAdapter"
 ]
 
 
