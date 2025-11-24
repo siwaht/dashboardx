@@ -8,7 +8,8 @@ import type {
   ChatMessage, InsertChatMessage,
   DataSource, InsertDataSource,
   CustomAgent, InsertCustomAgent,
-  AgentExecution, InsertAgentExecution
+  AgentExecution, InsertAgentExecution,
+  Invitation, InsertInvitation
 } from "../shared/schema.js";
 import * as schema from "../shared/schema.js";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -17,54 +18,59 @@ export interface IStorage {
   // Tenants
   getTenant(id: string): Promise<Tenant | undefined>;
   createTenant(tenant: InsertTenant): Promise<Tenant>;
-  
+
   // Users
   getUserById(id: string): Promise<UserProfile | undefined>;
   getUserByEmail(email: string): Promise<UserProfile | undefined>;
   getUsersByTenant(tenantId: string): Promise<UserProfile[]>;
   createUser(user: InsertUserProfile): Promise<UserProfile>;
   updateUser(id: string, updates: Partial<UserProfile>): Promise<UserProfile>;
-  
+
   // Documents
   getDocuments(tenantId: string): Promise<Document[]>;
   getDocument(id: string): Promise<Document | undefined>;
   createDocument(document: InsertDocument): Promise<Document>;
   updateDocument(id: string, updates: Partial<Document>): Promise<Document>;
   deleteDocument(id: string): Promise<void>;
-  
+
   // Document Chunks
   getDocumentChunks(documentId: string): Promise<DocumentChunk[]>;
   createDocumentChunk(chunk: InsertDocumentChunk): Promise<DocumentChunk>;
-  
+
   // Chat Sessions
   getChatSessions(userId: string): Promise<ChatSession[]>;
   getChatSession(id: string): Promise<ChatSession | undefined>;
   createChatSession(session: InsertChatSession): Promise<ChatSession>;
   updateChatSession(id: string, updates: Partial<ChatSession>): Promise<ChatSession>;
   deleteChatSession(id: string): Promise<void>;
-  
+
   // Chat Messages
   getChatMessages(sessionId: string): Promise<ChatMessage[]>;
   createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
-  
+
   // Data Sources
   getDataSources(tenantId: string): Promise<DataSource[]>;
   getDataSource(id: string): Promise<DataSource | undefined>;
   createDataSource(dataSource: InsertDataSource): Promise<DataSource>;
   updateDataSource(id: string, updates: Partial<DataSource>): Promise<DataSource>;
   deleteDataSource(id: string): Promise<void>;
-  
+
   // Custom Agents
   getCustomAgents(tenantId: string): Promise<CustomAgent[]>;
   getCustomAgent(id: string): Promise<CustomAgent | undefined>;
   createCustomAgent(agent: InsertCustomAgent): Promise<CustomAgent>;
   updateCustomAgent(id: string, updates: Partial<CustomAgent>): Promise<CustomAgent>;
   deleteCustomAgent(id: string): Promise<void>;
-  
+
   // Agent Executions
   getAgentExecutions(agentId: string): Promise<AgentExecution[]>;
   createAgentExecution(execution: InsertAgentExecution): Promise<AgentExecution>;
   updateAgentExecution(id: string, updates: Partial<AgentExecution>): Promise<AgentExecution>;
+
+  // Invitations
+  createInvitation(invitation: InsertInvitation): Promise<Invitation>;
+  getInvitationByToken(token: string): Promise<Invitation | undefined>;
+  deleteUser(id: string): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -78,6 +84,26 @@ export class MemStorage implements IStorage {
   private dataSources: Map<string, DataSource> = new Map();
   private agents: Map<string, CustomAgent> = new Map();
   private executions: Map<string, AgentExecution> = new Map();
+  private invitations: Map<string, Invitation> = new Map();
+
+  async deleteUser(id: string) {
+    this.users.delete(id);
+  }
+
+  async createInvitation(data: InsertInvitation) {
+    const invitation: Invitation = {
+      id: crypto.randomUUID(),
+      ...data,
+      acceptedAt: data.acceptedAt ?? null,
+      createdAt: new Date()
+    };
+    this.invitations.set(invitation.token, invitation);
+    return invitation;
+  }
+
+  async getInvitationByToken(token: string) {
+    return this.invitations.get(token);
+  }
 
   async getTenant(id: string) {
     return this.tenants.get(id);
@@ -337,7 +363,7 @@ export class MemStorage implements IStorage {
 
 // Postgres-backed storage implementation
 export class DbStorage implements IStorage {
-  constructor(private db: NodePgDatabase<typeof schema>) {}
+  constructor(private db: NodePgDatabase<typeof schema>) { }
 
   async getTenant(id: string) {
     const result = await this.db.select().from(schema.tenants).where(eq(schema.tenants.id, id));
@@ -509,6 +535,21 @@ export class DbStorage implements IStorage {
   async updateAgentExecution(id: string, updates: Partial<AgentExecution>) {
     const result = await this.db.update(schema.agentExecutions).set(updates).where(eq(schema.agentExecutions.id, id)).returning();
     if (!result[0]) throw new Error("Agent execution not found");
+    return result[0];
+  }
+
+  async deleteUser(id: string) {
+    await this.db.delete(schema.userProfiles).where(eq(schema.userProfiles.id, id));
+  }
+
+  async createInvitation(data: InsertInvitation) {
+    const result = await this.db.insert(schema.invitations).values(data).returning();
+    if (!result[0]) throw new Error("Failed to create invitation");
+    return result[0];
+  }
+
+  async getInvitationByToken(token: string) {
+    const result = await this.db.select().from(schema.invitations).where(eq(schema.invitations.token, token));
     return result[0];
   }
 }
